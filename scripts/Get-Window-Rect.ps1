@@ -4,9 +4,6 @@ using System.Runtime.InteropServices;
 public class Window {
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
-    [DllImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -32,11 +29,9 @@ $ClientRect = New-Object RECT
 $TopLeft = New-Object POINT
 $BottomRight = New-Object POINT
 
-# $GotWindowRect = [Window]::GetWindowRect($Handle, [ref]$WindowRect)
-
 [Window]::GetClientRect($Handle, [ref]$ClientRect) | out-null
-$TopLeft.x = 0
-$TopLeft.y = 0
+$TopLeft.x = $ClientRect.Left
+$TopLeft.y = $ClientRect.Top
 $BottomRight.x = $ClientRect.Right
 $BottomRight.y = $ClientRect.Bottom
 
