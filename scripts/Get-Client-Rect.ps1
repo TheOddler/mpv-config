@@ -24,23 +24,15 @@ public struct POINT
 "@
 
 $Handle = (Get-Process -Id $Args[0]).MainWindowHandle
-$WindowRect = New-Object RECT
 $ClientRect = New-Object RECT
-$TopLeft = New-Object POINT
-$BottomRight = New-Object POINT
+$Position = New-Object POINT
+$Size = New-Object POINT
 
 [Window]::GetClientRect($Handle, [ref]$ClientRect) | out-null
-$TopLeft.x = $ClientRect.Left
-$TopLeft.y = $ClientRect.Top
-$BottomRight.x = $ClientRect.Right
-$BottomRight.y = $ClientRect.Bottom
+$Position.x = 0 # $ClientRect.Left is always 0
+$Position.y = 0 # $ClientRect.Top
+$Size.x = $ClientRect.Right
+$Size.y = $ClientRect.Bottom
+[Window]::ClientToScreen($Handle, [ref]$Position) | out-null
 
-[Window]::ClientToScreen($Handle, [ref]$TopLeft) | out-null
-[Window]::ClientToScreen($Handle, [ref]$BottomRight) | out-null
-
-$WindowRect.Left = $TopLeft.x
-$WindowRect.Top = $TopLeft.y
-$WindowRect.Right = $BottomRight.x
-$WindowRect.Bottom = $BottomRight.y
-
-ConvertTo-Json($WindowRect)
+Write-Output "$($Position.x) $($Position.y) $($Size.x) $($Size.y)"
