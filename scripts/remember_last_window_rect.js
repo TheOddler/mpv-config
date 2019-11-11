@@ -1,3 +1,7 @@
+// Sometime the leftmost screen doesn't have id 0
+// not sure yet how to detect this automatically
+var leftMostScreen = 1
+
 // Some setup used by both reading and writing
 var dir = mp.utils.split_path(mp.get_script_file())[0]
 var rect_path = mp.utils.join_path(dir, "last_window_rect.txt")
@@ -10,8 +14,10 @@ try {
     var y = rect[1]
     var width = rect[2]
     var height = rect[3]
-    mp.set_property("screen", 0)
-    mp.set_property("geometry", width + "x" + height + "+" + x + "+" + y)
+    mp.set_property("screen", leftMostScreen)
+    var geometry = width + "x" + height + "+" + x + "+" + y
+    dump("Set geometry: " + geometry)
+    mp.set_property("geometry", geometry)
 }
 catch (e) {
     dump(e)
